@@ -1,0 +1,90 @@
+{% extends 'main_template.html' %}
+{% load static %}
+
+{% block main %}
+
+
+<div class="blog">
+    <div class="container">
+        <h1 class="text-center">Plug into the world of minimalism and find something for yourself</h1>
+
+        <div class="row">
+
+{% if latest_posts_list %}
+    {% for index, post in latest_posts_list_en %}
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            <div class="card">
+                <div class="card-img">
+                    {% if post.image %}
+                        <img align="center" src="{{ post.image.url}}" class="img-fluid">
+                    {% else %}
+                        <img src="" >
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ post.title }}</h4>
+                    <p class="card-text">
+                            {{ post.pub_date }}
+                    </p>
+
+                </div>
+                <div class="card-footer">
+                    <a href="/posts/{{ post.id }}/" class="card-link">Read more</a>
+                    {% if username %}
+                        {% if index == 0 and likes.0 == 1 or index == 1 and likes.1 == 1 or index == 2 and likes.2 == 1 %}
+                            <nobr>&nbsp;&nbsp;&nbsp;<a href="addlike/{{ post.id }}/" id="like-link"><img src="{% static "like.png" %}"  id = "like_ex"></a>&nbsp;{{ post.likes }}</nobr>
+                        {% else %}
+                            <nobr>&nbsp;&nbsp;&nbsp;<a href="addlike/{{ post.id }}/" id="like-link"><img src="{% static "like.png" %}"  id = "like"></a>&nbsp;{{ post.likes }}</nobr>
+                        {%  endif %}
+
+                    {% else %}
+                        <nobr>&nbsp;&nbsp;&nbsp;<a href="auth/login/" id="like-link"><img src="{% static "like.png" %}"  id = "like"></a>&nbsp;{{ post.likes }}</nobr>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No posts.</p>
+{% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if latest_posts_list.has_previous %}
+            <li class="page-item"><a class="page-link" href="/page/{{ latest_posts_list.previous_page_number }}/">Previous</a></li>
+        {% else %}
+            <li class="page-item disabled "><a class="page-link" href="">Previous</a></li>
+
+        {% endif %}
+
+      {% for page in latest_posts_list.paginator.page_range %}
+          {% if page == latest_posts_list.number %}
+                <li class="page-item active"><a href="/page/{{ page }}/" class="page-link" >{{ page }}</a></li>
+            {% else %}
+                <li class="page-item"><a href="/page/{{ page }}/" class="page-link">{{ page }}</a> </li>
+            {%  endif %}
+        {% endfor %}
+
+
+        {% if latest_posts_list.has_next %}
+            <li class="page-item"><a class="page-link" href="/page/{{ latest_posts_list.next_page_number }}/">Next</a></li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+        {% endif %}
+
+  </ul>
+</nav>
+
+
+
+
+{% endblock %}
+
+

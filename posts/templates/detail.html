@@ -1,0 +1,104 @@
+{% extends 'main_template.html' %}
+{% load static %}
+
+
+{% block main %}
+
+
+    <div class="row desc">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h3 class="text-center"><font color="#32CD32">▍{{ post.title }}</font></h3>
+        </div>
+    </div>
+
+    <div class="row desc">
+        <div class="col-lg-4 col-md-4 col-sm-12" align="right">
+            {% if post.image %}
+                <img align="center" class="img-fluid" src="{{ post.image.url }}">
+            {% endif %}
+
+            {% if username %}
+                {% if likes == 1 %}
+                    <br>
+                    <a href="addlike_in/0/" id="like-link">
+                    <img src="{% static "like.png" %}"  id = "like_ex">
+                    </a>
+                    {{ post.likes }}
+
+                {% else %}
+                <span>
+                    <a href="addlike_in/0/" id="like-link">
+                        <img src="{% static "like.png" %}"  id = "like">
+                    </a>
+                 &nbsp;{{ post.likes }}
+                </span>
+                {% endif %}
+            {% else %}
+                <br>
+                <a href="auth/login/" id="like-link">
+                <img src="{% static "like.png" %}"  id = "like">
+                </a>
+                &nbsp;{{ post.likes }}
+            {% endif %}
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-12 ">
+            <p>
+                {{ post.text|linebreaks }}
+            </p>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <hr>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 comments">
+                <h1>Comments</h1>
+            </div>
+            <div class="col-lg-6 col-md-4 col-sm-12 text_comment">
+                {% for comment in comments %}
+                    <div class="comment_class">
+                        <p>
+                            {{ comment.comment_text }}
+                            <div class="text-right">
+                                <span>
+                                    {{ comment.comment_author.username }} - {{ comment.comment_date }}
+                                </span>
+                            </div>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="contact-form">
+        <div class="container">
+            <hr>
+            {% if username %}
+                <form action="addcomment/" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <h1>Leave your comment here</h1>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-12 right">
+                            <div class="form-group ">
+                                <div>
+                                    {{ form }}
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-secondary btn-block" value="Send" name="">
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <p><font color="#888">*Only registered users can leave comments</font></p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
